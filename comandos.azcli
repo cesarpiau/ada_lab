@@ -1,0 +1,2 @@
+az login
+az storage blob upload --account-name stgvmscriptudaz --container-name scripts --file virtual_machines\script-windows.ps1

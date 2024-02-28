@@ -15,7 +15,7 @@ resource "azurerm_public_ip" "vmlinux" {
   # domain_name_label = "umbivis"
 }
 
-output "vmk8s_public_ips" {
+output "vmlinux_public_ips" {
   value = azurerm_public_ip.vmlinux[*].ip_address
 }
 

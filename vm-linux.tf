@@ -42,8 +42,8 @@ resource "azurerm_linux_virtual_machine" "vmlinux" {
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   admin_username      = "adminuser"
-  admin_password      = "Adalab+123456"
-  size                = "Standard_D16ps_v5  "
+  admin_password      = "Adalab$56789"
+  size                = "Standard_D8as_v5"
   priority = "Spot"
   eviction_policy = "Deallocate"
   max_bid_price = "0.4000"
@@ -61,7 +61,7 @@ resource "azurerm_linux_virtual_machine" "vmlinux" {
 
   os_disk {
     caching              = "ReadWrite"
-    storage_account_type = "Standard_LRS"
+    storage_account_type = "Premium_LRS"
   }
 
   source_image_reference {

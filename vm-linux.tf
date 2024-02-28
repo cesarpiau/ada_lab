@@ -42,11 +42,11 @@ resource "azurerm_linux_virtual_machine" "vmlinux" {
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   admin_username      = "adminuser"
-  admin_password      = "Parangarico-123"
-  size                = "Standard_D4as_v5"
+  admin_password      = "Adalab+123456"
+  size                = "Standard_D16ps_v5  "
   priority = "Spot"
   eviction_policy = "Deallocate"
-  max_bid_price = "0.0416"
+  max_bid_price = "0.4000"
   # zone = 1
   # availability_set_id = azurerm_availability_set.avsetlinux.id
 

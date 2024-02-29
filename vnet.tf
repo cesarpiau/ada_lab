@@ -42,13 +42,13 @@ resource "azurerm_network_security_group" "nsgpublic" {
   }
 
   security_rule {
-    name                       = "allow_rdp"
+    name                       = "allow_rabbit"
     priority                   = 101
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Tcp"
     source_port_range          = "*"
-    destination_port_range     = "3389"
+    destination_port_range     = "4369, 5672, 5671, 5552, 5551, 6000-6500, 25672, 35672-35682, 15672, 15671, 61613, 61614, 1883, 8883, 15674, 15675, 15692, 15691"
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }

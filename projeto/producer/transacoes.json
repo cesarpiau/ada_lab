@@ -1,212 +1,352 @@
 [
 	{
-		"conta": 7894,
-		"timestamp": "2024-03-07T01:23:37",
-		"uf": "RJ",
-		"valor": 138.95,
-		"tipo": "saque"
-	},
-	{
-		"conta": 7894,
-		"timestamp": "2024-03-07T02:12:58",
-		"uf": "DF",
-		"valor": 781.67,
-		"tipo": "saque"
-	},
-	{
-		"conta": 9976,
-		"timestamp": "2024-03-07T02:51:39",
-		"uf": "ES",
-		"valor": 423.65,
-		"tipo": "pix"
-	},
-	{
 		"conta": 321,
-		"timestamp": "2024-03-07T03:02:01",
-		"uf": "PR",
-		"valor": 629.02,
-		"tipo": "pix"
-	},
-	{
-		"conta": 7894,
-		"timestamp": "2024-03-07T03:05:33",
-		"uf": "GO",
-		"valor": 941.83,
+		"timestamp": "2024-03-08T01:04:49",
+		"uf": "RJ",
+		"valor": 803.48,
 		"tipo": "pix"
 	},
 	{
 		"conta": 9976,
-		"timestamp": "2024-03-07T04:13:00",
-		"uf": "GO",
-		"valor": 314.3,
-		"tipo": "pix"
-	},
-	{
-		"conta": 809,
-		"timestamp": "2024-03-07T04:29:57",
-		"uf": "SP",
-		"valor": 271.24,
+		"timestamp": "2024-03-08T01:58:17",
+		"uf": "RJ",
+		"valor": 264.22,
 		"tipo": "saque"
 	},
 	{
-		"conta": 321,
-		"timestamp": "2024-03-07T05:11:18",
-		"uf": "MG",
-		"valor": 571.11,
+		"conta": 1032,
+		"timestamp": "2024-03-08T02:13:30",
+		"uf": "RJ",
+		"valor": 636.89,
 		"tipo": "saque"
-	},
-	{
-		"conta": 3890,
-		"timestamp": "2024-03-07T05:12:08",
-		"uf": "RJ",
-		"valor": 360.55,
-		"tipo": "pix"
-	},
-	{
-		"conta": 809,
-		"timestamp": "2024-03-07T05:26:09",
-		"uf": "DF",
-		"valor": 672.91,
-		"tipo": "pix"
-	},
-	{
-		"conta": 7894,
-		"timestamp": "2024-03-07T05:33:44",
-		"uf": "PR",
-		"valor": 767.24,
-		"tipo": "pix"
-	},
-	{
-		"conta": 7894,
-		"timestamp": "2024-03-07T06:21:05",
-		"uf": "BA",
-		"valor": 565.84,
-		"tipo": "pix"
-	},
-	{
-		"conta": 809,
-		"timestamp": "2024-03-07T06:26:09",
-		"uf": "RJ",
-		"valor": 871.3,
-		"tipo": "pix"
 	},
 	{
 		"conta": 8908,
-		"timestamp": "2024-03-07T06:50:10",
-		"uf": "SP",
-		"valor": 388.89,
+		"timestamp": "2024-03-08T02:14:19",
+		"uf": "DF",
+		"valor": 696.76,
+		"tipo": "saque"
+	},
+	{
+		"conta": 23,
+		"timestamp": "2024-03-08T03:20:25",
+		"uf": "DF",
+		"valor": 384.25,
+		"tipo": "saque"
+	},
+	{
+		"conta": 1032,
+		"timestamp": "2024-03-08T03:21:19",
+		"uf": "RJ",
+		"valor": 159.86,
 		"tipo": "pix"
 	},
 	{
-		"conta": 3890,
-		"timestamp": "2024-03-07T07:07:09",
+		"conta": 7894,
+		"timestamp": "2024-03-08T03:43:38",
+		"uf": "SP",
+		"valor": 200.93,
+		"tipo": "pix"
+	},
+	{
+		"conta": 9976,
+		"timestamp": "2024-03-08T04:16:58",
 		"uf": "DF",
-		"valor": 264.63,
+		"valor": 450.5,
 		"tipo": "saque"
+	},
+	{
+		"conta": 2134,
+		"timestamp": "2024-03-08T04:24:12",
+		"uf": "RJ",
+		"valor": 808.14,
+		"tipo": "saque"
+	},
+	{
+		"conta": 1032,
+		"timestamp": "2024-03-08T04:49:22",
+		"uf": "SP",
+		"valor": 670.37,
+		"tipo": "saque"
+	},
+	{
+		"conta": 321,
+		"timestamp": "2024-03-08T05:04:38",
+		"uf": "RJ",
+		"valor": 295.01,
+		"tipo": "pix"
+	},
+	{
+		"conta": 809,
+		"timestamp": "2024-03-08T05:32:11",
+		"uf": "RJ",
+		"valor": 794.76,
+		"tipo": "pix"
 	},
 	{
 		"conta": 2231,
-		"timestamp": "2024-03-07T07:22:27",
-		"uf": "MG",
-		"valor": 838.24,
+		"timestamp": "2024-03-08T05:38:26",
+		"uf": "SP",
+		"valor": 664.69,
 		"tipo": "saque"
 	},
 	{
-		"conta": 8908,
-		"timestamp": "2024-03-07T07:27:49",
-		"uf": "GO",
-		"valor": 128.11,
-		"tipo": "saque"
-	},
-	{
-		"conta": 23,
-		"timestamp": "2024-03-07T07:41:30",
-		"uf": "MG",
-		"valor": 358.03,
-		"tipo": "saque"
-	},
-	{
-		"conta": 3890,
-		"timestamp": "2024-03-07T07:55:29",
-		"uf": "DF",
-		"valor": 866.42,
+		"conta": 9976,
+		"timestamp": "2024-03-08T05:43:02",
+		"uf": "RJ",
+		"valor": 805.08,
 		"tipo": "pix"
 	},
 	{
 		"conta": 321,
-		"timestamp": "2024-03-07T08:10:48",
-		"uf": "RJ",
-		"valor": 206.52,
-		"tipo": "saque"
-	},
-	{
-		"conta": 1032,
-		"timestamp": "2024-03-07T08:32:17",
-		"uf": "RJ",
-		"valor": 470.07,
-		"tipo": "saque"
-	},
-	{
-		"conta": 1032,
-		"timestamp": "2024-03-07T09:04:44",
+		"timestamp": "2024-03-08T05:48:27",
 		"uf": "SP",
-		"valor": 735.13,
+		"valor": 970.28,
+		"tipo": "pix"
+	},
+	{
+		"conta": 2134,
+		"timestamp": "2024-03-08T06:05:24",
+		"uf": "RJ",
+		"valor": 201.98,
+		"tipo": "pix"
+	},
+	{
+		"conta": 7894,
+		"timestamp": "2024-03-08T06:08:10",
+		"uf": "DF",
+		"valor": 456.33,
+		"tipo": "pix"
+	},
+	{
+		"conta": 2231,
+		"timestamp": "2024-03-08T06:29:06",
+		"uf": "SP",
+		"valor": 432.78,
+		"tipo": "pix"
+	},
+	{
+		"conta": 23,
+		"timestamp": "2024-03-08T06:34:23",
+		"uf": "RJ",
+		"valor": 397.44,
 		"tipo": "saque"
 	},
 	{
 		"conta": 7894,
-		"timestamp": "2024-03-07T09:30:37",
-		"uf": "PR",
-		"valor": 489.1,
-		"tipo": "pix"
+		"timestamp": "2024-03-08T06:39:41",
+		"uf": "DF",
+		"valor": 814.74,
+		"tipo": "saque"
+	},
+	{
+		"conta": 9976,
+		"timestamp": "2024-03-08T06:42:04",
+		"uf": "DF",
+		"valor": 580.2,
+		"tipo": "saque"
+	},
+	{
+		"conta": 809,
+		"timestamp": "2024-03-08T06:43:28",
+		"uf": "SP",
+		"valor": 151.86,
+		"tipo": "saque"
+	},
+	{
+		"conta": 9976,
+		"timestamp": "2024-03-08T07:04:16",
+		"uf": "SP",
+		"valor": 909.46,
+		"tipo": "saque"
+	},
+	{
+		"conta": 7894,
+		"timestamp": "2024-03-08T07:21:28",
+		"uf": "SP",
+		"valor": 187.19,
+		"tipo": "saque"
 	},
 	{
 		"conta": 2134,
-		"timestamp": "2024-03-07T10:32:06",
-		"uf": "PR",
-		"valor": 974.95,
-		"tipo": "saque"
+		"timestamp": "2024-03-08T08:06:59",
+		"uf": "SP",
+		"valor": 324.48,
+		"tipo": "pix"
+	},
+	{
+		"conta": 3890,
+		"timestamp": "2024-03-08T08:49:36",
+		"uf": "SP",
+		"valor": 714.17,
+		"tipo": "pix"
 	},
 	{
 		"conta": 321,
-		"timestamp": "2024-03-07T10:51:39",
-		"uf": "ES",
-		"valor": 257.04,
+		"timestamp": "2024-03-08T08:51:00",
+		"uf": "SP",
+		"valor": 535.37,
 		"tipo": "saque"
 	},
 	{
-		"conta": 23,
-		"timestamp": "2024-03-07T10:57:53",
+		"conta": 3890,
+		"timestamp": "2024-03-08T08:54:23",
+		"uf": "DF",
+		"valor": 403.34,
+		"tipo": "pix"
+	},
+	{
+		"conta": 9976,
+		"timestamp": "2024-03-08T09:26:50",
 		"uf": "RJ",
-		"valor": 553.43,
+		"valor": 928.61,
 		"tipo": "pix"
 	},
 	{
 		"conta": 1032,
-		"timestamp": "2024-03-07T11:21:06",
-		"uf": "DF",
-		"valor": 619.18,
+		"timestamp": "2024-03-08T09:48:40",
+		"uf": "SP",
+		"valor": 493.75,
 		"tipo": "pix"
+	},
+	{
+		"conta": 3890,
+		"timestamp": "2024-03-08T10:25:41",
+		"uf": "DF",
+		"valor": 551.92,
+		"tipo": "saque"
+	},
+	{
+		"conta": 321,
+		"timestamp": "2024-03-08T10:40:12",
+		"uf": "SP",
+		"valor": 609.39,
+		"tipo": "pix"
+	},
+	{
+		"conta": 1032,
+		"timestamp": "2024-03-08T10:41:38",
+		"uf": "DF",
+		"valor": 385.06,
+		"tipo": "saque"
+	},
+	{
+		"conta": 8908,
+		"timestamp": "2024-03-08T11:16:20",
+		"uf": "DF",
+		"valor": 242.24,
+		"tipo": "pix"
+	},
+	{
+		"conta": 321,
+		"timestamp": "2024-03-08T11:20:35",
+		"uf": "SP",
+		"valor": 932.09,
+		"tipo": "saque"
+	},
+	{
+		"conta": 3890,
+		"timestamp": "2024-03-08T11:23:35",
+		"uf": "DF",
+		"valor": 562.6,
+		"tipo": "saque"
 	},
 	{
 		"conta": 2134,
-		"timestamp": "2024-03-07T12:15:54",
-		"uf": "RJ",
-		"valor": 222.49,
+		"timestamp": "2024-03-08T12:09:13",
+		"uf": "DF",
+		"valor": 559.44,
 		"tipo": "pix"
 	},
 	{
-		"conta": 809,
-		"timestamp": "2024-03-07T12:43:01",
+		"conta": 23,
+		"timestamp": "2024-03-09T01:17:13",
 		"uf": "SP",
-		"valor": 992.59,
+		"valor": 600.72,
 		"tipo": "pix"
 	},
 	{
-		"conta": 809,
-		"timestamp": "2024-03-07T12:56:11",
-		"uf": "PR",
-		"valor": 511.65,
+		"conta": 321,
+		"timestamp": "2024-03-09T01:40:08",
+		"uf": "SP",
+		"valor": 669.77,
+		"tipo": "saque"
+	},
+	{
+		"conta": 321,
+		"timestamp": "2024-03-09T02:00:42",
+		"uf": "RJ",
+		"valor": 178.56,
+		"tipo": "saque"
+	},
+	{
+		"conta": 7894,
+		"timestamp": "2024-03-09T02:06:46",
+		"uf": "SP",
+		"valor": 596.21,
 		"tipo": "pix"
+	},
+	{
+		"conta": 7894,
+		"timestamp": "2024-03-09T02:11:54",
+		"uf": "DF",
+		"valor": 204.69,
+		"tipo": "pix"
+	},
+	{
+		"conta": 2231,
+		"timestamp": "2024-03-09T02:59:34",
+		"uf": "DF",
+		"valor": 726.63,
+		"tipo": "pix"
+	},
+	{
+		"conta": 3890,
+		"timestamp": "2024-03-09T03:44:37",
+		"uf": "SP",
+		"valor": 399.05,
+		"tipo": "pix"
+	},
+	{
+		"conta": 8908,
+		"timestamp": "2024-03-09T03:57:26",
+		"uf": "SP",
+		"valor": 980.51,
+		"tipo": "saque"
+	},
+	{
+		"conta": 3890,
+		"timestamp": "2024-03-09T05:21:19",
+		"uf": "RJ",
+		"valor": 741.52,
+		"tipo": "saque"
+	},
+	{
+		"conta": 2134,
+		"timestamp": "2024-03-09T05:42:02",
+		"uf": "RJ",
+		"valor": 485.84,
+		"tipo": "saque"
+	},
+	{
+		"conta": 2134,
+		"timestamp": "2024-03-09T05:57:15",
+		"uf": "DF",
+		"valor": 600.27,
+		"tipo": "saque"
+	},
+	{
+		"conta": 3890,
+		"timestamp": "2024-03-09T06:48:18",
+		"uf": "DF",
+		"valor": 343.54,
+		"tipo": "saque"
+	},
+	{
+		"conta": 1032,
+		"timestamp": "2024-03-09T07:25:11",
+		"uf": "SP",
+		"valor": 575.06,
+		"tipo": "saque"
 	}
 ]

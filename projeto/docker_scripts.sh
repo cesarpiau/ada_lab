@@ -11,7 +11,7 @@ docker run --rm -d -p 9000:9000 -p 9001:9001 --name minio1 -e "MINIO_ROOT_USER=g
 pip install minio pika redis requests uuid
 
 # MinIO Client [Opcional]
-mkdir ~/.minio
-Invoke-WebRequest https://dl.min.io/client/mc/release/windows-amd64/mc.exe -OutFile '~/.minio/mc.exe'
-~\.minio\mc.exe alias set local http://127.0.0.1:9000 guest guestguest
+# mkdir ~/.minio
+# Invoke-WebRequest https://dl.min.io/client/mc/release/windows-amd64/mc.exe -OutFile '~/.minio/mc.exe'
+# ~\.minio\mc.exe alias set local http://127.0.0.1:9000 guest guestguest
 

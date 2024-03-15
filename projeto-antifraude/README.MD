@@ -31,7 +31,7 @@ O fluxo da solução ocorre da seguinte forma:
 OBS.: O código está devidamente comentado para um melhor entendimento.
 
 ### Pré-requisitos
-A máquina deve ter o Docker e o Python instalados, além do pip para a instalações dos pacotes Python.
+A máquina deve ter o Docker e o Python 3.9 (ou superior) instalados, além do pip para a instalações dos pacotes Python.
 
 ### Executando o Projeto
 1. Execute o script bash de subida dos containers com as ferramentas e instação dos pacotes python utilizados, chamado <b>docker_scripts.sh</b>.

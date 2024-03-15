@@ -1,4 +1,5 @@
-#! /bin/bash
+#!/bin/bash
+
 # RabbitMQ
 docker container run --rm -d -p 15672:15672 -p 5672:5672 rabbitmq:3-management
 
@@ -9,7 +10,7 @@ docker run --rm -d --name redis-stack -p 6379:6379 -p 8001:8001 redis/redis-stac
 docker run --rm -d -p 9000:9000 -p 9001:9001 --name minio1 -e "MINIO_ROOT_USER=guest" -e "MINIO_ROOT_PASSWORD=guestguest" -v ~/.minio/data:/data quay.io/minio/minio server /data --console-address ":9001"
 
 # Python Packages
-pip install minio pika redis requests uuid
+pip3 install minio pika redis requests uuid
 
 # MinIO Client [Opcional]
 # mkdir ~/.minio

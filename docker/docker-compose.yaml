@@ -1,0 +1,11 @@
+version: latest
+
+services:
+  nginx:
+    image: cesarpiau/nginx_tool
+    ports:
+      - 80:80
+    environment:
+      - ambiente=PRD
+
+  

@@ -1,0 +1,5 @@
+services:
+  image: nginx
+  ports:
+  - 8080:80
+  

@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM 3.11.9-alpine
 
 WORKDIR /app
 # COPY ./requirements.txt /app

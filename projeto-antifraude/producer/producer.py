@@ -7,7 +7,7 @@ f = open('transacoes.json')
 data = json.load(f)
 
 # ABERTURA DE CONEXÃO COM O RABBITMQ
-connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabitmq'))
 channel = connection.channel()
 
 # DECLARA A FILA DE TRANSAÇÕES E DEFINE A PROPRIEDADE DAS MENSAGENS NA FILA DE TRANSAÇÕES

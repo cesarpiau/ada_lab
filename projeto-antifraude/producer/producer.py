@@ -7,7 +7,7 @@ f = open('transacoes.json')
 data = json.load(f)
 
 # ABERTURA DE CONEXÃO COM O RABBITMQ
-connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabitmq'))
+connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq'))
 channel = connection.channel()
 
 # DECLARA A FILA DE TRANSAÇÕES E DEFINE A PROPRIEDADE DAS MENSAGENS NA FILA DE TRANSAÇÕES
@@ -24,7 +24,7 @@ for i in data:
     channel.basic_publish(exchange='', routing_key='transacoes', body=message, properties=prop_transacoes)
     channel.basic_publish(exchange='', routing_key='antifraude', body=message, properties=prop_antifraude)
     print(" [+] Transação Enviada: " + message)
-    time.sleep(0.1)
+    time.sleep(1)
 
 connection.close()
 f.close()

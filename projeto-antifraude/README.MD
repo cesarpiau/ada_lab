@@ -26,7 +26,6 @@ Lembre que toda solução deve esta contida no repositório , sem nenhuma ação
  - Conter dados da ultima transação 
  - Deve conter o numero da conta 
  - Opcional (dados da transação previa)
- - Voce pode utilizar outras ferramentas similares de mensageiria, cache e storage.
 
 ## Instruções para Executar o Projeto
 ### Estrutura do Projeto
@@ -37,7 +36,6 @@ Foram utilizadas no projeto as ferramentas RabbitMQ, Redis, MinIO, Flask e Traef
 
 ### Fluxo da Solução
 O fluxo da solução ocorre da seguinte forma:
- - O comando <b>docker compose up -d</b> compila as imagens e executa todos os containers necessários.
  - O container de <b>producer.py</b>, ao subir, faz a leitura do arquivo JSON e posta as mensagens nas filas do RabbitMQ (transacoes e antifraude).
  - O container de <b>consumer-antifraude.py</b> retira as mensagens da fila <b>antifraude</b> e analisa se a mesma é fraudulenta ou não, armazenando todas as transações em cache e atualizando o relatório (.txt) no bucket do MinIO com as transações fraudulentas.
  - Para cada conta é gerado um relatório cujo nome é o número da conta.
@@ -51,11 +49,8 @@ OBS.: O código está devidamente comentado para um melhor entendimento.
 A máquina deve ter o Docker instalado.
 
 ### Executando o Projeto
-1. Execute o script bash de subida dos containers com as ferramentas e instação dos pacotes python utilizados, chamado <b>docker_scripts.sh</b>.
-2. Em seguinda, execute o script python <b>consumer-antifraude.py</b>, localizado na pasta consumer.
-3. Em outra janela de terminal, execute o script python <b>producer.py</b>, localizado na pasta producer.
-4. Por fim, retorne para janela onde está sendo executado o producer, aguarde ele terminar de processar as mensagens e interrompa o script utilizando as teclas CTRL+C.
+1. O comando <b>docker compose up -d</b> compila as imagens e executa todos os containers necessários.
+2. É possível acompanhar criação dos relatórios acessando o MinIO no endereço http://minio.localhost:9001.
+3. Também é possível consultar os relatórios que já foram enviados para o bucket na API http://api.localhost:5000/relatorios.
 
-OBS.1: O producer tem um temporizador de 0.1 segundo entre cada postagen na fila, para melhorar a visualização do processamento das mensagens.
-    
-OBS.2: A massa de testes possui 50 transações no formato JSON.
+OBS.1: A massa de testes possui 50 transações no formato JSON.

@@ -118,11 +118,5 @@ def salvarRelatorio():
 if __name__ == '__main__':
     try:
         main()
-    except KeyboardInterrupt:
-        # O RELATÓRIO É ENVIADO PARA O OBJECT STORE APÓS O USUÁRIO INTERROMPER O CONSUMO NA FILA
-        print('[*] Consumidor Interrompido. Salvando relatório...')
-        salvarRelatorio()
-        try:
-            sys.exit(0)
-        except SystemExit:
-            os._exit(0)
+    except:
+        os._exit(0)

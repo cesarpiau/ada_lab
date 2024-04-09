@@ -1,33 +1,25 @@
 #!/usr/bin/env python
-import datetime, pika, sys, os, redis, json, uuid, io
+import datetime, pika, os, redis, json
 from datetime import timedelta
 from minio import Minio
 
 def main():
     # ABERTURA DE CONEXÃO COM O RABBITMQ E DECLARAÇÃO DA FILA
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
-#    connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq'))
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq'))
     channel = connection.channel()
     channel.queue_declare(queue='antifraude')
 
     # ABERTURA DE CONEXÃO COM O CACHE REDIS
-    r = redis.Redis(host='localhost', port=6379, db=0)
-#    r = redis.Redis(host='redis', port=6379, db=0)
+    r = redis.Redis(host='redis', port=6379, db=0)
 
     # ABRE A CONEXÃO COM O SERVIÇO MINIO
     global client, bucket
-    client = Minio('localhost:9000', secure=False, access_key='guest', secret_key='guestguest')
-#    client = Minio('minio:9000', secure=False, access_key='guest', secret_key='guestguest')
-    
+    client = Minio('minio:9000', secure=False, access_key='guest', secret_key='guestguest')
     bucket = 'relatorios'
     
     # CRIAR O BUCKET CASO ELE AINDA NÃO EXISTA
     if not client.bucket_exists(bucket):
         client.make_bucket(bucket)
-
-    # DEFINIÇÃO DA VARIÁVEL GLOBAL COM O NOME ÚNICO DO ARQUIVO DE RELATÓRIO PARA A EXECUÇÃO
-    global arquivo
-    arquivo =  f'{str(datetime.date.today())}_{str(uuid.uuid4())}.txt'
 
     # FUNÇÃO DE CALLBACK PARA TRATAR AS MENSAGENS RETIRADAS DA FILA DE ANTI-FRAUDE
     def callback(ch, method, properties, body):
@@ -97,26 +89,13 @@ def main():
         client.fput_object(bucket, objeto, objeto, 'text/plain')
         os.remove(objeto)
 
-    
     # ABRE O CANAL COM A FILA E COMEÇA A RETIRAR AS MENSAGENS
     channel.basic_consume(queue='antifraude', on_message_callback=callback, auto_ack=True)
     print(' [*] Aguardando Mensagens. Para sair, pressione CTRL+C')
     channel.start_consuming()
 
-# FUNÇÃO QUE COPIA O RELATÓRIO PARA O SERVIÇO DE OBJECT STORE
-def salvarRelatorio():
-    
-    # ENVIA O ARQUIVO PAR O BUCKET, GERA LINK ASSINADO PARA DOWNLOAD E REMOVE O ARQUIVO LOCAL
-    object_list = client.list_objects(bucket)
-    for object in object_list:
-        print(f'{object.object_name} - {object.size} bytes - {object.last_modified}')
-
-
-    # url = client.get_presigned_url("GET", bucket, arquivo, expires=timedelta(hours=2))
-    # print(f'[v] Link para download do relatório: {url}')
-
 if __name__ == '__main__':
     try:
         main()
     except:
-        os._exit(0)
+        os._exit(1)

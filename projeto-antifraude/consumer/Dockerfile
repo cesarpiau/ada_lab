@@ -1,8 +1,7 @@
-FROM ubuntu:22.04
+FROM python:3.11.9-alpine3.19
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y curl python3 python3-pip 
-RUN pip3 install minio pika redis requests uuid
+RUN apk add curl && pip install --upgrade pip && pip3 install minio pika redis
 COPY ["consumer-antifraude.py", "./"]
 ENTRYPOINT [ "python3", "consumer-antifraude.py" ]

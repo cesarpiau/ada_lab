@@ -5,7 +5,7 @@ services:
     image: rabbitmq:3-management
     healthcheck:
       test: rabbitmq-diagnostics check_port_connectivity
-      interval: 10s
+      interval: 5s
       timeout: 1s
       retries: 3
     ports:
@@ -24,6 +24,11 @@ services:
 
   minio:
     image: quay.io/minio/minio
+    healthcheck:
+      test: curl http://minio:9000/minio/health/live
+      interval: 5s
+      timeout: 1s
+      retries: 3
     ports:
       - "9000:9000"
       - "9001:9001"
@@ -33,6 +38,17 @@ services:
     volumes:
       - ~/.minio/data:/data
     command: server /data --console-address ":9001"
+    networks:
+      - lab-antifraude
+
+  reverse-proxy:
+    image: traefik:v2.11
+    command: --api.insecure=true --providers.docker
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - lab-antifraude
 
@@ -51,6 +67,18 @@ services:
       context: /consumer
     depends_on:
       - producer
+    networks:
+      - lab-antifraude
+
+  api:
+    build:
+      context: /api
+    ports:
+      - 5000:5000
+    depends_on:
+      minio:
+        condition: service_healthy
+        restart: true
     networks:
       - lab-antifraude
 

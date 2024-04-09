@@ -24,7 +24,7 @@ for i in data:
     channel.basic_publish(exchange='', routing_key='transacoes', body=message, properties=prop_transacoes)
     channel.basic_publish(exchange='', routing_key='antifraude', body=message, properties=prop_antifraude)
     print(" [+] Transação Enviada: " + message)
-    time.sleep(1)
+    time.sleep(0.1)
 
 connection.close()
 f.close()

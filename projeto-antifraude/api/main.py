@@ -1,5 +1,6 @@
 import requests, json
-from flask import Flask, jsonify, Response
+from datetime import timedelta
+from flask import Flask, Response
 from minio import Minio
 
 app = Flask(__name__)
@@ -7,6 +8,24 @@ app = Flask(__name__)
 # ABRE A CONEXÃO COM O SERVIÇO
 client = Minio('minio:9000', secure=False, access_key='guest', secret_key='guestguest')
 bucket = 'relatorios'
+policy = {
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {"AWS": "*"},
+            "Action": ["s3:GetBucketLocation", "s3:ListBucket"],
+            "Resource": "arn:aws:s3:::"+bucket+"",
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {"AWS": "*"},
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::"+bucket+"/*",
+        },
+    ],
+}
+client.set_bucket_policy(bucket, json.dumps(policy))
 
 def get_lista_relatorios_minio():
     objectList = client.list_objects(bucket)
@@ -14,37 +33,32 @@ def get_lista_relatorios_minio():
 
 
 def get_relatorio_minio(object_id):
-    object = client.get_object(bucket, object_id)
-    return object
+    url = client.presigned_get_object(bucket, object_id, expires=timedelta(hours=2))
+    return url
 
 @app.route("/relatorios", methods=["GET"])
 def get_lista_relatorios():
     objectList = get_lista_relatorios_minio()
     listJson = []
     for o in objectList:
-        obj_nome = o.object_name
-        obj_tamanho = o.size
-        obj_data = o.last_modified
-        listJson.insert(f'"arquivo":"{obj_nome}","tamanho":"{obj_tamanho}","ultima-alteracao":"{obj_data}"')
-    return json.dumps(listJson)
+        objectJson = {"arquivo":""+o.object_name+"","tamanho":o.size,"ultima-alteracao":""+str(o.last_modified)+""}
+        listJson.append(objectJson)
+    return Response(json.dumps(listJson), mimetype="application/json")
     
 @app.route("/relatorios/<object_id>", methods=["GET"])
 def get_relatorio(object_id):
-    object = get_relatorio_minio(object_id)
-    obj_nome = object.object_name
-    obj_tamanho = object.size
-    obj_data = object.last_modified
-    objectJson = f'"arquivo":"{obj_nome}","tamanho":"{obj_tamanho}","ultima-alteracao":"{obj_data}"'
-    return json.dumps(objectJson)
+    url = get_relatorio_minio(object_id)
+    urlJson = {"link":""+url+""}
+    return Response(json.dumps(urlJson), mimetype="application/json")
 
 @app.route("/health", methods=["GET"])
 def healthcheck():
     try:
-        health = requests.get('https://minio:9000/minio/health/live')
+        health = requests.get('http://minio:9000/minio/health/live')
         status = health.status_code
         if status == 200:
-            return Response(jsonify({"status":"healthy"}), status=200)
+            return Response(response=json.dumps({"status":"healthy"}), status=200)
         else:
-            return Response(jsonify({"status":"unhealthy"}), status=500)
+            return Response(response=json.dumps({"status":"unhealthy"}), status=500)
     except:
-        return Response(jsonify({"status":"unhealthy"}), status=500)
+        return Response(response=json.dumps({"status":"unhealthy"}), status=500)

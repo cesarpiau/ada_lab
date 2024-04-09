@@ -1,8 +1,13 @@
 version: '3'
 
 services:
-  rabitmq:
+  rabbitmq:
     image: rabbitmq:3-management
+    healthcheck:
+      test: rabbitmq-diagnostics check_port_connectivity
+      interval: 10s
+      timeout: 1s
+      retries: 3
     ports:
       - 15672:15672
       - 5672:5672
@@ -28,6 +33,24 @@ services:
     volumes:
       - ~/.minio/data:/data
     command: server /data --console-address ":9001"
+    networks:
+      - lab-antifraude
+
+  producer:
+    build:
+      context: /producer
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+        restart: true
+    networks:
+      - lab-antifraude
+
+  consumer:
+    build:
+      context: /consumer
+    depends_on:
+      - producer
     networks:
       - lab-antifraude
 

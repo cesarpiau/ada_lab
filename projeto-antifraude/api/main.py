@@ -8,6 +8,11 @@ app = Flask(__name__)
 # ABRE A CONEXÃO COM O SERVIÇO
 client = Minio('minio:9000', secure=False, access_key='guest', secret_key='guestguest')
 bucket = 'relatorios'
+
+# CRIAR O BUCKET CASO ELE AINDA NÃO EXISTA
+if not client.bucket_exists(bucket):
+    client.make_bucket(bucket)
+
 policy = {
     "Version": "2012-10-17",
     "Statement": [
@@ -28,28 +33,40 @@ policy = {
 client.set_bucket_policy(bucket, json.dumps(policy))
 
 def get_lista_relatorios_minio():
-    objectList = client.list_objects(bucket)
-    return objectList
+    if client.bucket_exists(bucket):
+        objectList = client.list_objects(bucket)
+        return objectList
+    else:
+        return None
 
 
 def get_relatorio_minio(object_id):
-    url = client.presigned_get_object(bucket, object_id, expires=timedelta(hours=2))
-    return url
+    if client.bucket_exists(bucket):
+        url = client.presigned_get_object(bucket, object_id, expires=timedelta(hours=2))
+        return url
+    else:
+        return None
 
 @app.route("/relatorios", methods=["GET"])
 def get_lista_relatorios():
     objectList = get_lista_relatorios_minio()
-    listJson = []
-    for o in objectList:
-        objectJson = {"arquivo":""+o.object_name+"","tamanho":o.size,"ultima-alteracao":""+str(o.last_modified)+""}
-        listJson.append(objectJson)
-    return Response(json.dumps(listJson), mimetype="application/json")
+    if objectList is None:
+        return Response(status=404)
+    else:
+        listJson = []
+        for o in objectList:
+            objectJson = {"arquivo":""+o.object_name+"","tamanho":o.size,"ultima-alteracao":""+str(o.last_modified)+""}
+            listJson.append(objectJson)
+        return Response(json.dumps(listJson), mimetype="application/json")
     
 @app.route("/relatorios/<object_id>", methods=["GET"])
 def get_relatorio(object_id):
     url = get_relatorio_minio(object_id)
-    urlJson = {"link":""+url+""}
-    return Response(json.dumps(urlJson), mimetype="application/json")
+    if url is None:
+        return Response(status=404)
+    else:
+        urlJson = {"link":""+url+""}
+        return Response(json.dumps(urlJson), mimetype="application/json")
 
 @app.route("/health", methods=["GET"])
 def healthcheck():

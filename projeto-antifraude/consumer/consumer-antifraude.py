@@ -1,16 +1,29 @@
 #!/usr/bin/env python
-import datetime, pika, sys, os, redis, json, uuid
+import datetime, pika, sys, os, redis, json, uuid, io
 from datetime import timedelta
 from minio import Minio
 
 def main():
     # ABERTURA DE CONEXÃO COM O RABBITMQ E DECLARAÇÃO DA FILA
     connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+#    connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq'))
     channel = connection.channel()
     channel.queue_declare(queue='antifraude')
 
     # ABERTURA DE CONEXÃO COM O CACHE REDIS
     r = redis.Redis(host='localhost', port=6379, db=0)
+#    r = redis.Redis(host='redis', port=6379, db=0)
+
+    # ABRE A CONEXÃO COM O SERVIÇO MINIO
+    global client, bucket
+    client = Minio('localhost:9000', secure=False, access_key='guest', secret_key='guestguest')
+#    client = Minio('minio:9000', secure=False, access_key='guest', secret_key='guestguest')
+    
+    bucket = 'relatorios'
+    
+    # CRIAR O BUCKET CASO ELE AINDA NÃO EXISTA
+    if not client.bucket_exists(bucket):
+        client.make_bucket(bucket)
 
     # DEFINIÇÃO DA VARIÁVEL GLOBAL COM O NOME ÚNICO DO ARQUIVO DE RELATÓRIO PARA A EXECUÇÃO
     global arquivo
@@ -55,16 +68,36 @@ def main():
                 print(resultado)
                 
                 # A TRANSAÇÃO CO SUSPEITA DE FRAUDE VAI PARA O RELATÓRIO LOCAL
-                criarRelatorio(msgTransacaoRecebida, msgTransacaoAnterior, resultado)
+                atualizarRelatorio(conta, msgTransacaoRecebida, msgTransacaoAnterior, resultado)
      
-    # FUNÇÃO QUE ALIMENTA O ARQUIVO LOCAL DO RELATÓRIO DE FRAUDE
-    def criarRelatorio(msgTransacaoRecebida, msgTransacaoAnterior, resultado):
-        f = open(arquivo, "a")
+    # FUNÇÃO QUE VERIFICA SE EXISTE O OBJETO NO BUCKET
+    def objectExists(bucket, object):
+        try:
+            client.get_object(bucket, object)
+            return True
+        except:
+            return False
+    
+    # FUNÇÃO QUE ALIMENTA O ARQUIVO DO RELATÓRIO DE FRAUDE
+    def atualizarRelatorio(conta, msgTransacaoRecebida, msgTransacaoAnterior, resultado):
+        objeto = f'{conta}.txt'
+        
+        # RECUPERAR O RELATÓRIO DO BUCKET CASO ELE EXISTA
+        if objectExists(bucket, objeto):
+            client.fget_object(bucket, objeto, objeto)
+
+        # INCLUIR A NOVA TRANSAÇÃO
+        f = open(objeto, "a")
         f.write(f'{msgTransacaoRecebida}\n')
         f.write(f'{msgTransacaoAnterior}\n')
         f.write(f'{resultado}\n\n')
         f.close()
 
+        # ENVIA O NOVO RELATORIO PARA O BUCKET
+        client.fput_object(bucket, objeto, objeto, 'text/plain')
+        os.remove(objeto)
+
+    
     # ABRE O CANAL COM A FILA E COMEÇA A RETIRAR AS MENSAGENS
     channel.basic_consume(queue='antifraude', on_message_callback=callback, auto_ack=True)
     print(' [*] Aguardando Mensagens. Para sair, pressione CTRL+C')
@@ -72,19 +105,15 @@ def main():
 
 # FUNÇÃO QUE COPIA O RELATÓRIO PARA O SERVIÇO DE OBJECT STORE
 def salvarRelatorio():
-    # ABRE A CONEXÃO COM O SERVIÇO
-    client = Minio('127.0.0.1:9000', secure=False, access_key='guest', secret_key='guestguest')
-    bucket = 'relatorios'
-    
-    # CRIAR O BUCKET CASO ELE AINDA NÃO EXISTA
-    if not client.bucket_exists(bucket):
-        client.make_bucket(bucket)
     
     # ENVIA O ARQUIVO PAR O BUCKET, GERA LINK ASSINADO PARA DOWNLOAD E REMOVE O ARQUIVO LOCAL
-    client.fput_object(bucket, arquivo, arquivo)
-    url = client.get_presigned_url("GET", bucket, arquivo, expires=timedelta(hours=2))
-    print(f'[v] Link para download do relatório: {url}')
-    os.remove(arquivo)
+    object_list = client.list_objects(bucket)
+    for object in object_list:
+        print(f'{object.object_name} - {object.size} bytes - {object.last_modified}')
+
+
+    # url = client.get_presigned_url("GET", bucket, arquivo, expires=timedelta(hours=2))
+    # print(f'[v] Link para download do relatório: {url}')
 
 if __name__ == '__main__':
     try:

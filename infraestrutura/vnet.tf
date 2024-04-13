@@ -1,5 +1,5 @@
 resource "azurerm_resource_group" "rg" {
-  name     = "rg-vm"
+  name     = "rg-k8s"
   location = "eastus"
 }
 
@@ -14,14 +14,7 @@ resource "azurerm_subnet" "subnetpublic" {
   name                 = "sub-public"
   resource_group_name  = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes     = ["10.0.0.0/26"]
-}
-
-resource "azurerm_subnet" "subnetprivate" {
-  name                 = "sub-private"
-  resource_group_name  = azurerm_resource_group.rg.name
-  virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes     = ["10.0.0.128/25"]
+  address_prefixes     = ["10.0.0.0/25"]
 }
 
 resource "azurerm_network_security_group" "nsgpublic" {
@@ -30,26 +23,26 @@ resource "azurerm_network_security_group" "nsgpublic" {
   resource_group_name = azurerm_resource_group.rg.name
 
   security_rule {
-    name                       = "allow_80"
+    name                       = "allow_k8s_externo"
     priority                   = 100
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Tcp"
     source_port_range          = "*"
-    destination_port_range     = "80"
+    destination_port_range     = "30000-32767"
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
 
   security_rule {
-    name                       = "allow_rabbit"
+    name                       = "allow_k8s_interno"
     priority                   = 101
     direction                  = "Inbound"
     access                     = "Allow"
-    protocol                   = "Tcp"
+    protocol                   = "*"
     source_port_range          = "*"
-    destination_port_range     = "4369, 5672, 5671, 5552, 5551, 6000-6500, 25672, 35672-35682, 15672, 15671, 61613, 61614, 1883, 8883, 15674, 15675, 15692, 15691"
-    source_address_prefix      = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = azurerm_virtual_network.vnet.address_space[0]
     destination_address_prefix = "*"
   }
 
@@ -66,6 +59,12 @@ resource "azurerm_network_security_group" "nsgpublic" {
   }
 }
 
+resource "azurerm_subnet_network_security_group_association" "subnetpublic" {
+  subnet_id                 = azurerm_subnet.subnetpublic.id
+  network_security_group_id = azurerm_network_security_group.nsgpublic.id
+}
+
+/*
 resource "azurerm_network_security_group" "nsgprivate" {
   name                = "nsg-private"
   location            = azurerm_resource_group.rg.location
@@ -96,12 +95,71 @@ resource "azurerm_network_security_group" "nsgprivate" {
   }
 }
 
-resource "azurerm_subnet_network_security_group_association" "subnetpublic" {
-  subnet_id                 = azurerm_subnet.subnetpublic.id
-  network_security_group_id = azurerm_network_security_group.nsgpublic.id
-}
-
 resource "azurerm_subnet_network_security_group_association" "subnetprivate" {
   subnet_id                 = azurerm_subnet.subnetprivate.id
   network_security_group_id = azurerm_network_security_group.nsgprivate.id
 }
+
+resource "azurerm_public_ip" "lbk8s" {
+  name                = "pip-lbk8s"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  allocation_method   = "Static"
+  sku                 = "Standard"
+  domain_name_label   = "cajivis-master"
+}
+
+resource "azurerm_lb" "lbk8s" {
+  name                = "lb-vmss-linux"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  sku                 = "Standard"
+
+  frontend_ip_configuration {
+    name                 = "ip-config-public"
+    public_ip_address_id = azurerm_public_ip.lbk8s.id
+  }
+}
+
+resource "azurerm_lb_backend_address_pool" "lbk8s" {
+  name            = "lbbeaddpoll-k8s-control-plane"
+  loadbalancer_id = azurerm_lb.lbk8s.id
+}
+
+resource "azurerm_lb_probe" "lbk8s" {
+  loadbalancer_id     = azurerm_lb.lbk8s.id
+  name                = "ssh-running-probe"
+  port                = 22
+  interval_in_seconds = 5
+}
+
+resource "azurerm_lb_rule" "rulelbk8s" {
+  loadbalancer_id = azurerm_lb.lbk8s.id
+  name            = "rule-k8s"
+  protocol        = "Tcp"
+  frontend_port   = 6443
+  backend_port    = 6443
+  backend_address_pool_ids = [
+    azurerm_lb_backend_address_pool.lbk8s.id
+  ]
+  frontend_ip_configuration_name = "ip-config-public"
+  probe_id                       = azurerm_lb_probe.lbk8s.id
+}
+
+resource "azurerm_lb_rule" "rulelbhttp" {
+  loadbalancer_id = azurerm_lb.lbk8s.id
+  name            = "rule-http"
+  protocol        = "Tcp"
+  frontend_port   = 80
+  backend_port    = 80
+  backend_address_pool_ids = [
+    azurerm_lb_backend_address_pool.lbk8s.id
+  ]
+  frontend_ip_configuration_name = "ip-config-public"
+  probe_id                       = azurerm_lb_probe.lbk8s.id
+}
+
+output "vmk8s_lb_ip" {
+  value = azurerm_public_ip.lbk8s.ip_address
+}
+*/

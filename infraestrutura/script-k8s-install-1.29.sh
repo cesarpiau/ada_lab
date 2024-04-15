@@ -31,16 +31,3 @@ sysctl -w net.ipv4.ip_forward=1
 
 # HABILITANDO O BASH COMPLETION DO KUBECTL
 kubectl completion bash | sudo tee -a /etc/bash_completion.d/kubectl
-
-# sudo kubeadm init
-
-# echo 'alias kc=kubectl' | sudo tee -a ~/.bashrc
-# echo 'complete -o default -F __start_kubectl kc' | sudo tee -a ~/.bashrc
-# source ~/.bashrc
-
-# mkdir -p $HOME/.kube
-# sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-# sudo chown $(id -u):$(id -g) $HOME/.kube/config
-# kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
-# kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.3/manifests/tigera-operator.yaml
-# kubectl rollout restart deployment -n kube-system coredns

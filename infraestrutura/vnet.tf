@@ -23,7 +23,7 @@ resource "azurerm_network_security_group" "nsgpublic" {
   resource_group_name = azurerm_resource_group.rg.name
 
   security_rule {
-    name                       = "allow_k8s_externo"
+    name                       = "allow_k8s_nodeport"
     priority                   = 100
     direction                  = "Inbound"
     access                     = "Allow"
@@ -57,6 +57,19 @@ resource "azurerm_network_security_group" "nsgpublic" {
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
+
+  security_rule {
+    name                       = "allow_kube_api"
+    priority                   = 103
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "6443"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+
 }
 
 resource "azurerm_subnet_network_security_group_association" "subnetpublic" {
@@ -106,7 +119,7 @@ resource "azurerm_public_ip" "lbk8s" {
   location            = azurerm_resource_group.rg.location
   allocation_method   = "Static"
   sku                 = "Standard"
-  domain_name_label   = "cajivis-master"
+  domain_name_label   = "umbivis"
 }
 
 resource "azurerm_lb" "lbk8s" {
@@ -133,9 +146,9 @@ resource "azurerm_lb_probe" "lbk8s" {
   interval_in_seconds = 5
 }
 
-resource "azurerm_lb_rule" "rulelbk8s" {
+resource "azurerm_lb_rule" "rulelbk8sapi" {
   loadbalancer_id = azurerm_lb.lbk8s.id
-  name            = "rule-k8s"
+  name            = "rule-k8s-api"
   protocol        = "Tcp"
   frontend_port   = 6443
   backend_port    = 6443

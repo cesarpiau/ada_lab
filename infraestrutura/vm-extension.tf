@@ -1,9 +1,9 @@
 resource "azurerm_storage_blob" "vmk8s" {
-  name                   = "script-k8s-1.29.sh"
+  name                   = "script-k8s-install-1.29.sh"
   storage_account_name   = azurerm_storage_account.stgaccountscript.name
   storage_container_name = azurerm_storage_container.stgcontainerscript.name
   type                   = "Block"
-  source                 = "script-k8s-1.29.sh"
+  source                 = "script-k8s-install-1.29.sh"
 }
 
 resource "azurerm_virtual_machine_extension" "vmk8s" {
@@ -19,7 +19,7 @@ resource "azurerm_virtual_machine_extension" "vmk8s" {
 
   protected_settings = <<PROTECTED_SETTINGS
     {
-            "commandToExecute": "sh script-k8s-1.29.sh",
+            "commandToExecute": "sh script-k8s-install-1.29.sh",
             "storageAccountName": "${azurerm_storage_account.stgaccountscript.name}",
             "storageAccountKey": "${azurerm_storage_account.stgaccountscript.primary_access_key}",
             "fileUris": [

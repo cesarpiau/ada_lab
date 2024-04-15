@@ -1,6 +1,6 @@
 variable "vm-k8s" {
   type    = number
-  default = 3
+  default = 1
 }
 
 resource "azurerm_public_ip" "vmk8s" {
@@ -12,11 +12,11 @@ resource "azurerm_public_ip" "vmk8s" {
   # Para definir zona em VM o IP precisa ser Standard
   # sku               = "Standard"
   # zones             = ["1"]
-  # domain_name_label = "umbivis"
+  domain_name_label = "adalab${count.index}"
 }
 
 output "vmk8s_public_ips" {
-  value = azurerm_public_ip.vmk8s[*].ip_address
+  value = azurerm_public_ip.vmk8s[*].domain_name_label
 }
 
 resource "azurerm_network_interface" "vmk8s" {
@@ -64,5 +64,18 @@ resource "azurerm_linux_virtual_machine" "vmk8s" {
     offer     = "0001-com-ubuntu-minimal-jammy"
     sku       = "minimal-22_04-lts-gen2"
     version   = "latest"
+  }
+
+  provisioner "file" {
+    connection {
+      type = "ssh"
+      user = "adminuser"
+      host = element(azurerm_public_ip.vmk8s.*.ip_address, count.index)
+      private_key = file("/id_rsa")
+      agent    = false
+      timeout  = "1m"
+    }
+    source = "./script-k8s-init.sh"
+    destination = "/tmp/script-k8s-init.sh"
   }
 }

@@ -1,0 +1,32 @@
+$script_kubernetes = <<-SCRIPT
+    apt-get update && \
+    debconf-set-selections <<< 'mysql-server mysql-server/root_password password root' && \
+    debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password root' && \
+    apt-get install mariadb-server -y && \
+    mysql -u root -proot -e "create user 'phpuser'@'%' identified by 'pass';" && \
+    cat /configs/my.cnf > /etc/mysql/my.cnf && \
+    service mysql restart    
+SCRIPT
+
+Vagrant.configure("2") do |config|
+    config.vm.box = "generic/debian12"
+    config.vm.provider "hyperv" do |vb|
+        vb.memory = 4096
+        vb.cpus = 4
+    config.ssh.username = "piau"
+    config.ssh.password = "K8s+102030"
+    end
+
+    # Máquina Virtual MariaDB - IP 101
+    config.vm.define "kmaster" do |kmaster|
+        kmaster.vm.provider "hyperv" do |vb|
+        end
+        kmaster.vm.network "public_network", ip: "192.168.5.101"
+        # kmaster.vm.synced_folder "./configs", "/configs"
+        # kmaster.vm.synced_folder ".", "/vagrant", disabled: true
+        # kmaster.vm.provision "shell", inline: "cat /configs/id_rsa.pub >> .ssh/authorized_keys"
+        # kmaster.vm.provision "shell", inline: $script_mariadb
+        # mariadb.vm.provision "shell", inline: "cat /configs/my.cnf > /etc/mysql/my.cnf"
+        # mariadb.vm.provision "shell", inline: "service mysql restart"
+    end
+end

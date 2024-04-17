@@ -1,0 +1,3 @@
+    debconf-set-selections <<< 'mariadb-server mariadb-server/root_password password pass' && \
+    debconf-set-selections <<< 'mariadb-server mariadb-server/root_password_again password pass' && \
+    apt-get install mariadb-server -y

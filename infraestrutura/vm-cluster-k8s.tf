@@ -1,6 +1,6 @@
 variable "vm-k8s" {
   type    = number
-  default = 1
+  default = 3
 }
 
 resource "azurerm_public_ip" "vmk8s" {

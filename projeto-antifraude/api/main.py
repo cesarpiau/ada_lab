@@ -1,4 +1,4 @@
-import requests, json
+import os, requests, json
 from datetime import timedelta
 from flask import Flask, Response
 from minio import Minio
@@ -6,7 +6,8 @@ from minio import Minio
 app = Flask(__name__)
 
 # ABRE A CONEXÃO COM O SERVIÇO
-client = Minio('minio:9000', secure=False, access_key='guest', secret_key='guestguest')
+minio_endpoint = os.environ['MINIO_ENDPOINT']
+client = Minio(endpoint=minio_endpoint, secure=False, access_key='guest', secret_key='guestguest')
 bucket = 'relatorios'
 
 # CRIAR O BUCKET CASO ELE AINDA NÃO EXISTA

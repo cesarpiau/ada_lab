@@ -1,4 +1,4 @@
-import os, json, pika, time
+import json, pika, time
  
 # ABRE O ARQUIVO COM A MASSA DE TESTES DE TRANSAÇÕES
 f = open('transacoes.json')
@@ -7,8 +7,7 @@ f = open('transacoes.json')
 data = json.load(f)
 
 # ABERTURA DE CONEXÃO COM O RABBITMQ
-rabbitmq_host = os.environ['RABBITMQ_HOST']
-connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbitmq_host))
+connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq'))
 channel = connection.channel()
 
 # DECLARA A FILA DE TRANSAÇÕES E DEFINE A PROPRIEDADE DAS MENSAGENS NA FILA DE TRANSAÇÕES

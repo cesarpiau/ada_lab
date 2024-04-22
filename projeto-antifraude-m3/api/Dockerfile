@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM python:3.11.9-alpine3.19
+FROM python:3.12-alpine3.19
 
 WORKDIR /app
 RUN pip install --upgrade pip && pip install --no-cache-dir minio requests flask

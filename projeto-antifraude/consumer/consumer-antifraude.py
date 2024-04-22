@@ -5,22 +5,16 @@ from minio import Minio
 
 def main():
     # ABERTURA DE CONEXÃO COM O RABBITMQ E DECLARAÇÃO DA FILA
-    rabbitmq_host = os.environ['RABBITMQ_HOST']
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbitmq_host))
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq'))
     channel = connection.channel()
     channel.queue_declare(queue='antifraude')
 
     # ABERTURA DE CONEXÃO COM O CACHE REDIS
-    redis_host = os.environ['REDIS_HOST']
-    redis_port = os.environ['REDIS_PORT']
-    r = redis.Redis(host=redis_host, port=redis_port, db=0)
+    r = redis.Redis(host='redis', port=6379, db=0)
 
     # ABRE A CONEXÃO COM O SERVIÇO MINIO
     global client, bucket
-    minio_endpoint = os.environ['MINIO_ENDPOINT']
-    minio_access_key = os.environ['MINIO_ROOT_USER']
-    minio_secret_key = os.environ['MINIO_ROOT_PASSWORD']
-    client = Minio(endpoint=minio_endpoint, secure=False, access_key=minio_access_key, secret_key=minio_secret_key)
+    client = Minio('minio:9000', secure=False, access_key='guest', secret_key='guestguest')
     bucket = 'relatorios'
     
     # CRIAR O BUCKET CASO ELE AINDA NÃO EXISTA

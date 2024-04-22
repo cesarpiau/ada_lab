@@ -1,0 +1,10 @@
+[
+  '{{repeat(30)}}',
+      {
+        conta: '{{random("1032","0809","7894","3890","0023","2231","8908","2134","9976","0321")}}',
+        timestamp: '{{date(new Date("2024/03/09"), new Date(), "YYYY-MM-ddThh:mm:ss")}}',
+        uf: '{{random("DF","RJ","SP")}}',
+        valor: '{{floating(100,1000,2,"0.0,00")}}',
+        tipo: '{{random("pix","saque")}}'
+    }
+]

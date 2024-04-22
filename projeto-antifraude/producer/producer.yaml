@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: producer
+spec:
+  ttlSecondsAfterFinished: 120
+  template:
+    spec:
+      containers:
+      - name: producer
+        image: cesarpiau/lab-producer:latest
+        env:
+        - name: RABBITMQ_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: config-ferramentas
+              key: RABBITMQ_HOST
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "300m"
+      restartPolicy: Never

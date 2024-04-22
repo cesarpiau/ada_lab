@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # INICIANDO O CLUSTER E INFORMANDO O ENDPOINT DO CONTROL PLANE PARA CONEXÃO REMOTA
-sudo kubeadm init --control-plane-endpoint 'adalab0.eastus.cloudapp.azure.com:6443' --cri-socket 'unix:///var/run/crio/crio.sock' --pod-network-cidr '192.168.0.0/16'
+sudo kubeadm init --control-plane-endpoint="adalab0.eastus.cloudapp.azure.com:6443" --cri-socket="unix:///var/run/crio/crio.sock" --pod-network-cidr="192.168.0.0/16"
 
 # CONFIGURANDO O KUBECTL LOCAL
 mkdir -p $HOME/.kube

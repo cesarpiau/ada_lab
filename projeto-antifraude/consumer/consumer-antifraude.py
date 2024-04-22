@@ -18,7 +18,9 @@ def main():
     # ABRE A CONEXÃO COM O SERVIÇO MINIO
     global client, bucket
     minio_endpoint = os.environ['MINIO_ENDPOINT']
-    client = Minio(endpoint=minio_endpoint, secure=False, access_key='guest', secret_key='guestguest')
+    minio_access_key = os.environ['MINIO_ROOT_USER']
+    minio_secret_key = os.environ['MINIO_ROOT_PASSWORD']
+    client = Minio(endpoint=minio_endpoint, secure=False, access_key=minio_access_key, secret_key=minio_secret_key)
     bucket = 'relatorios'
     
     # CRIAR O BUCKET CASO ELE AINDA NÃO EXISTA

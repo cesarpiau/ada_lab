@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx
+spec:
+  selector:
+    matchLabels:
+      app: my-nginx
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app:  my-nginx
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+      - image:  cesarpiau/nginx_host
+        name:  my-nginx
+        resources:
+          requests:
+            cpu: "250m"
+            memory: "256M"
+          limits:
+            cpu: "500m"
+            memory: "512M"
+        ports:
+        - containerPort:  80  
+          name:  my-nginx
+        volumeMounts:
+        - mountPath: /data
+          name: data
+      volumes:
+        - name: data
+          emptyDir: {}
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-nginx
+spec:
+  selector:
+    app: my-nginx
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 31000
+  type: NodePort

@@ -75,8 +75,8 @@ def healthcheck():
         health = requests.get('http://minio:9000/minio/health/live')
         status = health.status_code
         if status == 200:
-            return Response(response=json.dumps({"status":"healthy"}), status=200)
+            return Response(response=json.dumps({"status":"healthy"}), status=200, mimetype="application/json")
         else:
-            return Response(response=json.dumps({"status":"unhealthy"}), status=500)
+            return Response(response=json.dumps({"status":"unhealthy"}), status=500, mimetype="application/json")
     except:
-        return Response(response=json.dumps({"status":"unhealthy"}), status=500)
+        return Response(response=json.dumps({"status":"unhealthy"}), status=500, mimetype="application/json")

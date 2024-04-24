@@ -12,8 +12,6 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 # kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.3/manifests/tigera-operator.yaml
 # kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.3/manifests/custom-resources.yaml
 kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
-sleep 5s
-kubectl rollout restart deployment -n kube-system coredns
 
 # CRIANDO ALIAS K PARA O KUBECTL LOCALMENTE
 echo 'alias k=kubectl' | sudo tee -a $HOME/.bashrc

@@ -1,4 +1,4 @@
-import os, requests, json
+import requests, json
 from datetime import timedelta
 from flask import Flask, Response
 from minio import Minio
@@ -6,8 +6,7 @@ from minio import Minio
 app = Flask(__name__)
 
 # ABRE A CONEXÃO COM O SERVIÇO
-minio_endpoint = os.environ['MINIO_ENDPOINT']
-client = Minio(endpoint=minio_endpoint, secure=False, access_key='guest', secret_key='guestguest')
+client = Minio('minio:9000', secure=False, access_key='guest', secret_key='guestguest')
 bucket = 'relatorios'
 
 # CRIAR O BUCKET CASO ELE AINDA NÃO EXISTA
@@ -40,11 +39,11 @@ def get_lista_relatorios_minio():
     else:
         return None
 
+
 def get_relatorio_minio(object_id):
     if client.bucket_exists(bucket):
-        object = client.get_object(bucket, object_id)
-        object.release_conn()
-        return object
+        url = client.presigned_get_object(bucket, object_id, expires=timedelta(hours=2))
+        return url
     else:
         return None
 
@@ -62,11 +61,12 @@ def get_lista_relatorios():
     
 @app.route("/relatorios/<object_id>", methods=["GET"])
 def get_relatorio(object_id):
-    object = get_relatorio_minio(object_id)
-    if object is None:
+    url = get_relatorio_minio(object_id)
+    if url is None:
         return Response(status=404)
     else:
-        return Response(object.data, mimetype="application/txt")
+        urlJson = {"link":""+url+""}
+        return Response(json.dumps(urlJson), mimetype="application/json")
 
 @app.route("/health", methods=["GET"])
 def healthcheck():
@@ -74,8 +74,8 @@ def healthcheck():
         health = requests.get('http://minio:9000/minio/health/live')
         status = health.status_code
         if status == 200:
-            return Response(response=json.dumps({"status":"healthy"}), status=200, mimetype="application/json")
+            return Response(response=json.dumps({"status":"healthy"}), status=200)
         else:
-            return Response(response=json.dumps({"status":"unhealthy"}), status=500, mimetype="application/json")
+            return Response(response=json.dumps({"status":"unhealthy"}), status=500)
     except:
-        return Response(response=json.dumps({"status":"unhealthy"}), status=500, mimetype="application/json")
+        return Response(response=json.dumps({"status":"unhealthy"}), status=500)

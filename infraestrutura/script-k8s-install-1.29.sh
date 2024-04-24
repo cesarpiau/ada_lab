@@ -4,7 +4,7 @@
 apt-get update
 apt-get install -y software-properties-common curl bash-completion nano htop vim
 
-KUBERNETES_VERSION=v1.29
+KUBERNETES_VERSION=v1.30
 PROJECT_PATH=prerelease:/main
 
 # ADD REPOSITÓRIO DO KUBERNETES 

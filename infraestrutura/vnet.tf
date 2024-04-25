@@ -112,6 +112,7 @@ resource "azurerm_subnet_network_security_group_association" "subnetprivate" {
   subnet_id                 = azurerm_subnet.subnetprivate.id
   network_security_group_id = azurerm_network_security_group.nsgprivate.id
 }
+*/
 
 resource "azurerm_public_ip" "lbk8s" {
   name                = "pip-lbk8s"
@@ -119,11 +120,11 @@ resource "azurerm_public_ip" "lbk8s" {
   location            = azurerm_resource_group.rg.location
   allocation_method   = "Static"
   sku                 = "Standard"
-  domain_name_label   = "umbivis"
+  domain_name_label   = "adalab"
 }
 
 resource "azurerm_lb" "lbk8s" {
-  name                = "lb-vmss-linux"
+  name                = "lb-k8s"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   sku                 = "Standard"
@@ -135,8 +136,24 @@ resource "azurerm_lb" "lbk8s" {
 }
 
 resource "azurerm_lb_backend_address_pool" "lbk8s" {
-  name            = "lbbeaddpoll-k8s-control-plane"
+  name            = "lbbeaddpoll-k8s-workers"
   loadbalancer_id = azurerm_lb.lbk8s.id
+}
+
+# resource "azurerm_lb_backend_address_pool_address" "lbk8s" {
+#   count = var.vm-k8s
+#   name                    = "lbbeaddpoll-k8s-workers-ips"
+#   backend_address_pool_id             = azurerm_lb_backend_address_pool.lbk8s.id
+#   virtual_network_id = azurerm_virtual_network.vnet.id
+#   ip_address = element(azurerm_public_ip.vmk8s.*.ip_address, count.index)
+# }
+
+resource "azurerm_lb_backend_address_pool_address" "lbk8s2" {
+  count = var.vm-k8s
+  name                    = "lbbeaddpoll-k8s-workers-ips${count.index}"
+  backend_address_pool_id             = azurerm_lb_backend_address_pool.lbk8s.id
+  virtual_network_id = azurerm_virtual_network.vnet.id
+  ip_address = element(azurerm_network_interface.vmk8s.*.private_ip_address, count.index)
 }
 
 resource "azurerm_lb_probe" "lbk8s" {
@@ -146,25 +163,12 @@ resource "azurerm_lb_probe" "lbk8s" {
   interval_in_seconds = 5
 }
 
-resource "azurerm_lb_rule" "rulelbk8sapi" {
-  loadbalancer_id = azurerm_lb.lbk8s.id
-  name            = "rule-k8s-api"
-  protocol        = "Tcp"
-  frontend_port   = 6443
-  backend_port    = 6443
-  backend_address_pool_ids = [
-    azurerm_lb_backend_address_pool.lbk8s.id
-  ]
-  frontend_ip_configuration_name = "ip-config-public"
-  probe_id                       = azurerm_lb_probe.lbk8s.id
-}
-
 resource "azurerm_lb_rule" "rulelbhttp" {
   loadbalancer_id = azurerm_lb.lbk8s.id
   name            = "rule-http"
   protocol        = "Tcp"
   frontend_port   = 80
-  backend_port    = 80
+  backend_port    = 30000
   backend_address_pool_ids = [
     azurerm_lb_backend_address_pool.lbk8s.id
   ]
@@ -175,4 +179,3 @@ resource "azurerm_lb_rule" "rulelbhttp" {
 output "vmk8s_lb_ip" {
   value = azurerm_public_ip.lbk8s.ip_address
 }
-*/

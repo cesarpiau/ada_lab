@@ -9,8 +9,7 @@ resource "azurerm_public_ip" "vmk8s" {
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   allocation_method   = "Static"
-  # Para definir zona em VM o IP precisa ser Standard
-  # sku               = "Standard"
+  sku               = "Standard"
   # zones             = ["1"]
   domain_name_label = "adalab${count.index}"
 }

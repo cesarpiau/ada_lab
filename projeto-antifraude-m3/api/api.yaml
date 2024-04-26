@@ -49,3 +49,23 @@ spec:
     targetPort: 5000
     nodePort: 30004
   type: NodePort
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+  name: ingress-api
+spec:
+  rules:
+    - host: adalab.eastus.cloudapp.azure.com
+      http:
+        paths:
+          - path: /api(/|$)(.*)
+            backend:
+              service:
+                name: api-relatorios
+                port:
+                  number: 5000
+            pathType: Prefix
+  ingressClassName: nginx

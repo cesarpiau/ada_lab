@@ -67,5 +67,5 @@ spec:
                 name: api-relatorios
                 port:
                   number: 5000
-            pathType: Prefix
+            pathType: ImplementationSpecific
   ingressClassName: nginx

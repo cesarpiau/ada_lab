@@ -1,0 +1,36 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: producer
+spec:
+  schedule: "* * * * *"
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 120
+      template:
+        spec:
+          containers:
+          - name: producer
+            image: cesarpiau/lab-producer-minio:latest
+            imagePullPolicy: Always
+            env:
+            - name: RABBITMQ_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: config-ferramentas
+                  key: RABBITMQ_HOST
+            - name: MINIO_ROOT_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: config-ferramentas
+                  key: MINIO_ROOT_USER
+            - name: MINIO_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret-ferramentas
+                  key: MINIO_ROOT_PASSWORD
+            resources:
+              limits:
+                memory: "256Mi"
+                cpu: "300m"
+          restartPolicy: Never

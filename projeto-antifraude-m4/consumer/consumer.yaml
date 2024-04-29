@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: consumer
+spec:
+  selector:
+    matchLabels:
+      app: consumer
+  template:
+    metadata:
+      labels:
+        app: consumer
+    spec:
+      containers:
+      - name: consumer
+        image: cesarpiau/lab-consumer:latest
+        envFrom:
+        - configMapRef:
+            name: config-ferramentas
+        env:
+        - name: MINIO_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: secret-ferramentas
+              key: MINIO_ROOT_PASSWORD
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "300m"

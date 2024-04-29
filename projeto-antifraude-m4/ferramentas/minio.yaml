@@ -47,13 +47,10 @@ spec:
         volumeMounts:
           - name:  minio-data
             mountPath: /data
-      # volumes:
-      # - name: minio-data
-      #   persistentVolumeClaim:
-      #     claimName: minio-pvc
       volumes:
       - name: minio-data
-        emptyDir: {}
+        persistentVolumeClaim:
+          claimName: minio-pvc
 ---
 apiVersion: v1
 kind: Service

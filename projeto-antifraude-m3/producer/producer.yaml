@@ -9,6 +9,7 @@ spec:
       containers:
       - name: producer
         image: cesarpiau/lab-producer:latest
+        imagePullPolicy: Always
         env:
         - name: RABBITMQ_HOST
           valueFrom:

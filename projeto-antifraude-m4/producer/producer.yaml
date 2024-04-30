@@ -19,6 +19,11 @@ spec:
                 configMapKeyRef:
                   name: config-ferramentas
                   key: RABBITMQ_HOST
+            - name: MINIO_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: config-ferramentas
+                  key: MINIO_ENDPOINT
             - name: MINIO_ROOT_USER
               valueFrom:
                 configMapKeyRef:

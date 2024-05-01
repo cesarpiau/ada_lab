@@ -49,9 +49,13 @@ O fluxo da solução ocorre da seguinte forma:
 OBS.: O código está devidamente comentado para um melhor entendimento.
 
 ## Pré-requisitos
-A máquina deve ter o minikube instalado e o cluster deve subir com o seguinte comando:
+A máquina deve ter o minikube ou o K3d instalado e o cluster deve subir com o seguinte comando:
 ```
-minikube start adalab --memory=2g --nodes=3 --ports 30001 30002 30003 30004
+minikube start adalab --memory=2g --nodes=3
+```
+Se estiver usando o K3D, o comando é:
+```
+k3d cluster create adalab -p 30001:30001 -p 30002:30002 -p 30003:30003 -p 30004:30004 --agents 2
 ```
 
 ## Executando o Projeto
@@ -59,13 +63,29 @@ minikube start adalab --memory=2g --nodes=3 --ports 30001 30002 30003 30004
 ```
 Kubectl apply -f ./ferramentas/.
 ```
-2. O comando vai criar todos os elementos necessários, tais como configMaps, secrets, volumes e o deployments das ferramentas.
-3. Em seguida, execute o comando abaixo para subir o producer, o consumer e a API:
+2. O comando vai criar todos os elementos necessários, tais como configMaps, secrets, volumes e os deployments das ferramentas.
+3. Se estiver usando o minikube, execute o comando port-forward para acessar as consoles, conforme abaixo:
+```
+kubectl port-forward service/rabbitmq-console 30001:15672
+kubectl port-forward service/redis-console 30002:8001
+kubectl port-forward service/minio-console 30003:9001
+```
+4. Se estiver usando o K3d, as consoles dos serviços já estarão disponíveis nos endereços abaixo:
+    - RabbitMQ - http://localhost:30001
+    - Redis - http://localhost:30002
+    - Minio - http://localhost:30003
+5. Em seguida, execute o comando abaixo para subir o producer, o consumer e a API:
 ```
 Kubectl apply -f .\producer\producer.yaml -f .\consumer\consumer.yaml -f .\api\api.yaml
 ```
-4. É possível acompanhar criação dos relatórios acessando o MinIO no endereço http://localhost:30003.
-5. Também é possível consultar os relatórios que já foram enviados para o bucket na API http://localhost:30004/relatorios.
-6. O endpoint http://localhost:30004/relatorios/<nome-do-arquivo.txt> baixa o arquivo do relatório.
+6. É possível acompanhar criação dos relatórios acessando a API.
+7. Se estiver usando o minikube, execute o comando port-forward para acessar a api, conforme abaixo:
+```
+kubectl port-forward service/api-relatorios 30004:5000
+```
+8. Se estiver usando o K3d, a API já estará disponível no endereço abaixo:
+    - http://localhost:30004/relatorios/
+9. Para baixar o arquivo do relatório, acesse o endpoint:
+    - http://localhost:30004/relatorios/<nome-do-arquivo.txt>
 
-OBS.1: A massa de testes possui 50 transações no formato JSON.
+Obs.1: O Ingress foi implementado para ser usado com o Load Balancer da Azure e não funcionará com o Minikube ou K3d.

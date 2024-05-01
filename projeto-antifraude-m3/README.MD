@@ -31,29 +31,30 @@ O projeto deve ser entregue em um repositório no GitHub contendo todos os arqui
 ## Avaliação
 Os projetos serão avaliados com base na correta implementação dos requisitos, na qualidade da documentação fornecida, e na eficácia com que o sistema implementado atende às demandas de escalabilidade, disponibilidade, e resiliência em um ambiente de produção real.
 
-## Instruções para Executar o Projeto
-### Estrutura do Projeto
+# Instruções para Executar o Projeto
+
+## Estrutura do Projeto
 O projeto está na pasta <b>projeto-antifraude-m3</b> do repositório.
 Essa pasta contém quatro outras pastas chamadas <b>ferramentas</b>, <b>producer</b>, <b>consumer</b> e <b>api</b>, sendo que cada uma contém os arquivos YAML para subir as ferramentas utilizadas (Rabbitmq, Redis e Minio), o programa python para postar e processar as mensagens e a api para consulta dos relatório no MinIO, respectivamente.
 Além dos scripts python, o projeto contém a massa de testes no formato JSON.
 
-### Fluxo da Solução
+## Fluxo da Solução
 O fluxo da solução ocorre da seguinte forma:
  - O job do <b>producer.py</b>, ao subir, faz a leitura do arquivo JSON e posta as mensagens nas filas do RabbitMQ (transacoes e antifraude).
  - O container de <b>consumer-antifraude.py</b> retira as mensagens da fila <b>antifraude</b> e analisa se a mesma é fraudulenta ou não, armazenando todas as transações em cache e atualizando o relatório (.txt) no bucket do MinIO com as transações fraudulentas.
  - Para cada conta é gerado um relatório cujo nome é o número da conta.
  - Consumida a massa de testes, o pod do producer se encerra.
- - A lista dos relatórios gerados podem ser acessda na API de relatórios.
+ - A lista dos relatórios gerados pode ser acessada na API de relatórios.
 
 OBS.: O código está devidamente comentado para um melhor entendimento.
 
-### Pré-requisitos
+## Pré-requisitos
 A máquina deve ter o minikube instalado e o cluster deve subir com o seguinte comando:
 ```
 minikube start adalab --memory=2g --nodes=3 --ports 30001 30002 30003 30004
 ```
 
-### Executando o Projeto
+## Executando o Projeto
 1. A partir da raiz do projeto (<b>/projeto-antifraude-m3</b>) execute as ferramentas com o comando:
 ```
 Kubectl apply -f ./ferramentas/.

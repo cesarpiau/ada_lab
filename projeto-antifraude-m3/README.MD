@@ -51,8 +51,10 @@ OBS.: O código está devidamente comentado para um melhor entendimento.
 ## Pré-requisitos
 A máquina deve ter o minikube ou o K3d instalado e o cluster deve subir com o seguinte comando:
 ```
-minikube start adalab --memory=2g --nodes=3
+minikube start --cpus=4 --memory=4g --ports="30001:30001,30002:30002,30003:30003,30004:30004"
 ```
+O comando acima já expõe as portas necessárias para acessar os principais serviços do projeto e não necessita executar o port-forward.
+
 Se estiver usando o K3D, o comando é:
 ```
 k3d cluster create adalab -p 30001:30001 -p 30002:30002 -p 30003:30003 -p 30004:30004 --agents 2
@@ -64,7 +66,7 @@ k3d cluster create adalab -p 30001:30001 -p 30002:30002 -p 30003:30003 -p 30004:
 Kubectl apply -f ./ferramentas/.
 ```
 2. O comando vai criar todos os elementos necessários, tais como configMaps, secrets, volumes e os deployments das ferramentas.
-3. Se estiver usando o minikube, execute o comando port-forward para acessar as consoles, conforme abaixo:
+3. Se estiver usando o minikube sem expor as portas na criação do cluster, execute o comando port-forward para acessar as consoles, conforme abaixo:
 ```
 kubectl port-forward service/rabbitmq-console 30001:15672
 kubectl port-forward service/redis-console 30002:8001
@@ -79,7 +81,7 @@ kubectl port-forward service/minio-console 30003:9001
 Kubectl apply -f .\producer\producer.yaml -f .\consumer\consumer.yaml -f .\api\api.yaml
 ```
 6. É possível acompanhar criação dos relatórios acessando a API.
-7. Se estiver usando o minikube, execute o comando port-forward para acessar a api, conforme abaixo:
+7. Se estiver usando o minikube sem expor as portas na criação do cluster, execute o comando port-forward para acessar a api, conforme abaixo:
 ```
 kubectl port-forward service/api-relatorios 30004:5000
 ```

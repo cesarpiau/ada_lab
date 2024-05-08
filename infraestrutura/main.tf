@@ -6,6 +6,12 @@ terraform {
     key                  = "k8s-ada-lab/terraform.tfstate"        # Can be passed via `-backend-config=`"key=<blob key name>"` in the `init` command.
   }
 }
+
 provider "azurerm" {
   features {}
+}
+
+resource "azurerm_resource_group" "rg" {
+  name     = "rg-k8s"
+  location = "eastus"
 }

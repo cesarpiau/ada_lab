@@ -39,10 +39,11 @@ resource "azurerm_linux_virtual_machine" "vmk8s" {
   location            = azurerm_resource_group.rg.location
   admin_username      = "adminuser"
   admin_password      = "Adalab$56789"
+  # size                = "Standard_B4as_v2"
   size                = "Standard_D4as_v5"
   priority = "Spot"
   eviction_policy = "Deallocate"
-  max_bid_price = "0.4000"
+  max_bid_price = "0.2000"
 
   admin_ssh_key {
     username   = "adminuser"
@@ -74,7 +75,7 @@ resource "azurerm_linux_virtual_machine" "vmk8s" {
       agent    = false
       timeout  = "1m"
     }
-    source = "./script-k8s-init.sh"
-    destination = "/tmp/script-k8s-init.sh"
+    source = "./scripts/"
+    destination = "/tmp"
   }
 }

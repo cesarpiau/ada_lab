@@ -1,8 +1,3 @@
-resource "azurerm_resource_group" "rg" {
-  name     = "rg-k8s"
-  location = "eastus"
-}
-
 resource "azurerm_virtual_network" "vnet" {
   name                = "vnet-vm"
   location            = azurerm_resource_group.rg.location

@@ -100,8 +100,9 @@ def main():
     print(' [*] Aguardando Mensagens. Para sair, pressione CTRL+C')
     channel.start_consuming()
 
-if __name__ == '__main__':
-    try:
-        main()
-    except:
-        os._exit(1)
+main()
+# if __name__ == '__main__':
+#     try:
+#         main()
+#     except:
+#         os._exit(1)

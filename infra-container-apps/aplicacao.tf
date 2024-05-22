@@ -45,9 +45,25 @@ resource "azurerm_container_app" "consumer" {
   template {
     container {
       name   = "ada-antifraude-consumer"
-      image  = "quay.io/minio/minio"
+      image  = "cesarpiau/lab-consumer:latest"
       cpu    = 0.5
       memory = "1Gi"
+      env {
+        name = "RABBITMQ_HOST"
+        value = "rabbitmq"
+      }
+      env {
+        name = "REDIS_HOST"
+        value = "redis"
+      }
+      env {
+        name = "REDIS_PORT"
+        value = "6378"
+      }
+      env {
+        name = "MINIO_ENDPOINT"
+        value = "minio:9000"
+      }
       env {
         name = "MINIO_ROOT_USER"
         value = "guest"
@@ -56,26 +72,31 @@ resource "azurerm_container_app" "consumer" {
         name = "MINIO_ROOT_PASSWORD"
         value = "guestguest"
       }
-      args = [ "server", "/data", "--console-address", ":9001" ]
-      volume_mounts {
-        name = "minio-data"
-        path = "/data"
-      }
-    }
-    volume {
-      name = "minio-data"
-      storage_type =  "EmptyDir"
-    }
-  }
-
-  ingress {
-    allow_insecure_connections = true
-    external_enabled = true
-    target_port = 9001
-    traffic_weight {
-      percentage = 100
-      latest_revision = true
     }
   }
 }
 
+resource "azurerm_container_app_job" "producer" {
+  name                         = "producer"
+  container_app_environment_id = azurerm_container_app_environment.ada_antifraude.id
+  resource_group_name          = azurerm_resource_group.rg.name
+  location = azurerm_resource_group.rg.location
+
+  replica_timeout_in_seconds = 10
+  replica_retry_limit        = 10
+
+  manual_trigger_config {}
+  
+  template {
+    container {
+      name   = "ada-antifraude-producer"
+      image  = "cesarpiau/lab-producer:latest"
+      cpu    = 0.5
+      memory = "1Gi"
+      env {
+        name = "RABBITMQ_HOST"
+        value = "rabbitmq"
+      }
+    }
+  }
+}

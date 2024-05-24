@@ -72,43 +72,6 @@ resource "azurerm_subnet_network_security_group_association" "subnetpublic" {
   network_security_group_id = azurerm_network_security_group.nsgpublic.id
 }
 
-/*
-resource "azurerm_network_security_group" "nsgprivate" {
-  name                = "nsg-private"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-
-  security_rule {
-    name                       = "allow_http"
-    priority                   = 100
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "80"
-    source_address_prefix      = azurerm_virtual_network.vnet.address_space[0]
-    destination_address_prefix = "*"
-  }
-
-  security_rule {
-    name                       = "deny_all"
-    priority                   = 101
-    direction                  = "Inbound"
-    access                     = "Deny"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "*"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-  }
-}
-
-resource "azurerm_subnet_network_security_group_association" "subnetprivate" {
-  subnet_id                 = azurerm_subnet.subnetprivate.id
-  network_security_group_id = azurerm_network_security_group.nsgprivate.id
-}
-*/
-
 resource "azurerm_public_ip" "lbk8s" {
   name                = "pip-lbk8s"
   resource_group_name = azurerm_resource_group.rg.name
@@ -134,14 +97,6 @@ resource "azurerm_lb_backend_address_pool" "lbk8s" {
   name            = "lbbeaddpoll-k8s-workers"
   loadbalancer_id = azurerm_lb.lbk8s.id
 }
-
-# resource "azurerm_lb_backend_address_pool_address" "lbk8s" {
-#   count = var.vm-k8s
-#   name                    = "lbbeaddpoll-k8s-workers-ips"
-#   backend_address_pool_id             = azurerm_lb_backend_address_pool.lbk8s.id
-#   virtual_network_id = azurerm_virtual_network.vnet.id
-#   ip_address = element(azurerm_public_ip.vmk8s.*.ip_address, count.index)
-# }
 
 resource "azurerm_lb_backend_address_pool_address" "lbk8s2" {
   count = var.qtde-vms

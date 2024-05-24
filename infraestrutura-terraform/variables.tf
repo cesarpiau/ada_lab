@@ -8,7 +8,7 @@ variable "rg-name" {
 }
 variable "qtde-vms" {
   type    = number
-  default = 1
+  default = 3
 }
 variable "vm-size" {
   type = string

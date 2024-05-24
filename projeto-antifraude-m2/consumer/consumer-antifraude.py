@@ -1,29 +1,20 @@
 #!/usr/bin/env python
-import datetime, pika, os, redis, json, logging, sys
+import datetime, pika, os, redis, json
 from datetime import timedelta
 from minio import Minio
 
-logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
-
 def main():
     # ABERTURA DE CONEXÃO COM O RABBITMQ E DECLARAÇÃO DA FILA
-    rabbitmq_host = os.environ['RABBITMQ_HOST']
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbitmq_host))
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq'))
     channel = connection.channel()
     channel.queue_declare(queue='antifraude')
 
     # ABERTURA DE CONEXÃO COM O CACHE REDIS
-    redis_host = os.environ['REDIS_HOST']
-    redis_port = os.environ['REDIS_PORT']
-    redis_pool = redis.ConnectionPool(host=redis_host, port=redis_port, db=0, health_check_interval=10)
-    r = redis.Redis(connection_pool=redis_pool)
+    r = redis.Redis(host='redis', port=6379, db=0)
 
     # ABRE A CONEXÃO COM O SERVIÇO MINIO
     global client, bucket
-    minio_endpoint = os.environ['MINIO_ENDPOINT']
-    minio_access_key = os.environ['MINIO_ROOT_USER']
-    minio_secret_key = os.environ['MINIO_ROOT_PASSWORD']
-    client = Minio(endpoint=minio_endpoint, secure=False, access_key=minio_access_key, secret_key=minio_secret_key)
+    client = Minio('minio:9000', secure=False, access_key='guest', secret_key='guestguest')
     bucket = 'relatorios'
     
     # CRIAR O BUCKET CASO ELE AINDA NÃO EXISTA
@@ -100,12 +91,11 @@ def main():
 
     # ABRE O CANAL COM A FILA E COMEÇA A RETIRAR AS MENSAGENS
     channel.basic_consume(queue='antifraude', on_message_callback=callback, auto_ack=True)
-    print(' [*] Aguardando Mensagens...')
+    print(' [*] Aguardando Mensagens. Para sair, pressione CTRL+C')
     channel.start_consuming()
 
-main()
-# if __name__ == '__main__':
-#     try:
-#         main()
-#     except:
-#         os._exit(1)
+if __name__ == '__main__':
+    try:
+        main()
+    except:
+        os._exit(1)

@@ -9,10 +9,6 @@ resource "azurerm_public_ip" "vmk8s" {
   domain_name_label = "adalab${count.index}"
 }
 
-output "vmk8s_public_ips" {
-  value = azurerm_public_ip.vmk8s[*].domain_name_label
-}
-
 resource "azurerm_network_interface" "vmk8s" {
   count               = var.qtde-vms
   name                = "nic-vml${count.index}"
@@ -74,4 +70,8 @@ resource "azurerm_linux_virtual_machine" "vmk8s" {
     source = "./scripts/"
     destination = "/tmp"
   }
+}
+
+output "vmk8s_public_ips" {
+  value = azurerm_public_ip.vmk8s[*].domain_name_label
 }

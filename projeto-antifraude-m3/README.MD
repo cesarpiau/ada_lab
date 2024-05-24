@@ -1,4 +1,4 @@
-# Projeto Final do Módulo 2 | Implementação Kubernetes para Detecção de Fraudes Bancárias
+# Projeto Final do Módulo 3 | Implementação Kubernetes para Detecção de Fraudes Bancárias
 ## Contexto
 
 A equipe ACME, após implementar com sucesso um sistema de detecção de fraudes bancárias usando Docker e serviços como Redis e RabbitMQ para processamento assíncrono de transações e armazenamento em cache, agora busca melhorar a disponibilidade, escalabilidade, e resiliência deste sistema em um ambiente de produção real. Com o crescimento exponencial no volume de transações processadas, tornou-se crítico garantir que o sistema possa escalar de forma eficiente e manter alta disponibilidade, mesmo frente a falhas de componentes individuais ou picos inesperados de demanda.

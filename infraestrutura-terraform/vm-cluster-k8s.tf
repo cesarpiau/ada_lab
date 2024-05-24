@@ -39,7 +39,7 @@ resource "azurerm_linux_virtual_machine" "vmk8s" {
 
   admin_ssh_key {
     username   = "adminuser"
-    public_key = file("/id_rsa.pub")
+    public_key = file("/ssh-keys/id_rsa.pub")
   }
 
   network_interface_ids = [

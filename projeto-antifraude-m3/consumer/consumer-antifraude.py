@@ -1,7 +1,9 @@
 #!/usr/bin/env python
-import datetime, pika, os, redis, json
+import datetime, pika, os, redis, json, logging, sys
 from datetime import timedelta
 from minio import Minio
+
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
 def main():
     # ABERTURA DE CONEXÃO COM O RABBITMQ E DECLARAÇÃO DA FILA
@@ -13,7 +15,8 @@ def main():
     # ABERTURA DE CONEXÃO COM O CACHE REDIS
     redis_host = os.environ['REDIS_HOST']
     redis_port = os.environ['REDIS_PORT']
-    r = redis.Redis(host=redis_host, port=redis_port, db=0)
+    redis_pool = redis.ConnectionPool(host=redis_host, port=redis_port, db=0, health_check_interval=10)
+    r = redis.Redis(connection_pool=redis_pool)
 
     # ABRE A CONEXÃO COM O SERVIÇO MINIO
     global client, bucket
@@ -97,7 +100,7 @@ def main():
 
     # ABRE O CANAL COM A FILA E COMEÇA A RETIRAR AS MENSAGENS
     channel.basic_consume(queue='antifraude', on_message_callback=callback, auto_ack=True)
-    print(' [*] Aguardando Mensagens. Para sair, pressione CTRL+C')
+    print(' [*] Aguardando Mensagens...')
     channel.start_consuming()
 
 main()

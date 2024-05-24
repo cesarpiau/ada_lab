@@ -26,31 +26,31 @@ resource "azurerm_container_app" "minio" {
       cpu    = 0.5
       memory = "1Gi"
       env {
-        name = "MINIO_ROOT_USER"
+        name  = "MINIO_ROOT_USER"
         value = "guest"
       }
       env {
-        name = "MINIO_ROOT_PASSWORD"
+        name  = "MINIO_ROOT_PASSWORD"
         value = "guestguest"
       }
-      args = [ "server", "/data", "--console-address", ":9001" ]
+      args = ["server", "/data", "--console-address", ":9001"]
       volume_mounts {
         name = "minio-data"
         path = "/data"
       }
     }
     volume {
-      name = "minio-data"
-      storage_type =  "EmptyDir"
+      name         = "minio-data"
+      storage_type = "EmptyDir"
     }
   }
 
   ingress {
     allow_insecure_connections = true
-    external_enabled = true
-    target_port = 9001
+    external_enabled           = true
+    target_port                = 9001
     traffic_weight {
-      percentage = 100
+      percentage      = 100
       latest_revision = true
     }
   }
@@ -73,10 +73,10 @@ resource "azurerm_container_app" "rabbitmq" {
 
   ingress {
     allow_insecure_connections = true
-    external_enabled = true
-    target_port = 15672
+    external_enabled           = true
+    target_port                = 15672
     traffic_weight {
-      percentage = 100
+      percentage      = 100
       latest_revision = true
     }
   }
@@ -99,11 +99,21 @@ resource "azurerm_container_app" "redis" {
 
   ingress {
     allow_insecure_connections = true
-    external_enabled = true
-    target_port = 8001
+    external_enabled           = true
+    target_port                = 8001
     traffic_weight {
-      percentage = 100
+      percentage      = 100
       latest_revision = true
     }
   }
+}
+
+output "rabbitmq_url" {
+  value = "https://${azurerm_container_app.rabbitmq.ingress[0].fqdn}"
+}
+output "redis_url" {
+  value = "https://${azurerm_container_app.redis.ingress[0].fqdn}"
+}
+output "minio_url" {
+  value = "https://${azurerm_container_app.minio.ingress[0].fqdn}"
 }

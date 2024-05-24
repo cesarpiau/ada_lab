@@ -1,10 +1,5 @@
-variable "vm-k8s" {
-  type    = number
-  default = 3
-}
-
 resource "azurerm_public_ip" "vmk8s" {
-  count               = var.vm-k8s
+  count               = var.qtde-vms
   name                = "pip-vml${count.index}"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
@@ -19,7 +14,7 @@ output "vmk8s_public_ips" {
 }
 
 resource "azurerm_network_interface" "vmk8s" {
-  count               = var.vm-k8s
+  count               = var.qtde-vms
   name                = "nic-vml${count.index}"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
@@ -33,7 +28,7 @@ resource "azurerm_network_interface" "vmk8s" {
 }
 
 resource "azurerm_linux_virtual_machine" "vmk8s" {
-  count = var.vm-k8s
+  count = var.qtde-vms
   name                = "k8s-${count.index}"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
@@ -41,9 +36,10 @@ resource "azurerm_linux_virtual_machine" "vmk8s" {
   admin_password      = "Adalab$56789"
   # size                = "Standard_B4as_v2"
   size                = "Standard_D4as_v5"
-  priority = "Spot"
-  eviction_policy = "Deallocate"
-  max_bid_price = "0.2000"
+
+  priority = var.vm-priority == "Spot" ? "Spot" : "Regular"
+  eviction_policy = var.vm-priority == "Spot" ? "Deallocate" : null
+  max_bid_price = var.vm-priority == "Spot" ? "0.2000" : null
 
   admin_ssh_key {
     username   = "adminuser"

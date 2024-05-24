@@ -7,7 +7,7 @@ resource "azurerm_storage_blob" "vmk8s" {
 }
 
 resource "azurerm_virtual_machine_extension" "vmk8s" {
-  count = var.vm-k8s
+  count = var.qtde-vms
   depends_on = [
     azurerm_storage_blob.vmk8s
   ]

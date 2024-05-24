@@ -144,7 +144,7 @@ resource "azurerm_lb_backend_address_pool" "lbk8s" {
 # }
 
 resource "azurerm_lb_backend_address_pool_address" "lbk8s2" {
-  count = var.vm-k8s
+  count = var.qtde-vms
   name                    = "lbbeaddpoll-k8s-workers-ips${count.index}"
   backend_address_pool_id             = azurerm_lb_backend_address_pool.lbk8s.id
   virtual_network_id = azurerm_virtual_network.vnet.id

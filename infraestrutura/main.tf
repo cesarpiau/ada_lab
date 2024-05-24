@@ -12,6 +12,6 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "rg" {
-  name     = "rg-k8s"
-  location = "eastus"
+  name     = var.rg-name
+  location = var.location
 }
